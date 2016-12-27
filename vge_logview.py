@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 
+import re
 import sys
 import datetime
 import matplotlib.pyplot as plt
+
+
+re_job_name = re.compile('(.*)_\d{8}_\d{4}_\d{6}\.sh\.\d+')
+
+
+def get_job_name(s):
+    return re_job_name.match(s).group(1)
 
 
 def color_mapper(id):
@@ -43,8 +51,15 @@ if __name__ == '__main__':
         f = get_timestamp(finish_time)
         #print(jobid, bulkjob_id, genomon_pid, unique_jobid)
         #print(unique_jobid, filename)
+        #print(jobid, unique_jobid, bulkjob_id, filename, max_task)
 
         job_list.append((int(worker), s, f, int(unique_jobid)))
+
+        if bulkjob_id == '0':
+            unique_job = get_job_name(filename)
+            if max_task != '0':
+                unique_job += ' (x' + max_task + ')'
+            print (unique_jobid, unique_job)
     
     #print(start)
     #print(job_list)
